@@ -1,15 +1,21 @@
-from fastapi import FastAPI;
+from fastapi import FastAPI
+from sqlalchemy.orm import Session
 
-app=FastAPI();
+from app.database import get_db,Base,engine
+from app.router import router as UserRouter
 
-app = FastAPI(
-    title="Blog API",
-    version="1.0.0",
-    description="Production-ready Blog API"
-)
+app=FastAPI()
+#if db is not exist then it will create a db
+Base.metadata.create_all(bind=engine)
 
-@app.get('/health')
+app.include_router(UserRouter)
+
+@app.get('/')
 def health_check():
-    return {
-        'status':'Ok'
+    return{
+        "message":"Health checkup api"
     }
+
+
+
+
